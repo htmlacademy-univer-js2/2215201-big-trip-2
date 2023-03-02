@@ -31,7 +31,7 @@ const sortFormTemplateCreation = () => (
   `
 );
 
-class SortForm {
+export default class SortForm {
   getTemplate () { return sortFormTemplateCreation(); }
 
   getElement() {
@@ -41,5 +41,3 @@ class SortForm {
 
   removeElement() { this.element = null; }
 }
-
-export default { SortForm };

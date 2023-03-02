@@ -167,7 +167,7 @@ const createFormTemplateCreation = () => (
   `
 );
 
-class CreateForm {
+export default class CreateForm {
   getTemplate () { return createFormTemplateCreation(); }
 
   getElement() {
@@ -177,5 +177,3 @@ class CreateForm {
 
   removeElement() { this.element = null; }
 }
-
-export default { CreateForm };

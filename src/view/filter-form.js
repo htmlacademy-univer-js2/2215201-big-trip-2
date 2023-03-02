@@ -23,7 +23,7 @@ const filterFormTemplateCreation = () => (
   `
 );
 
-class FilterForm {
+export default class FilterForm {
   getTemplate () { return filterFormTemplateCreation(); }
 
   getElement() {
@@ -33,5 +33,3 @@ class FilterForm {
 
   removeElement() { this.element = null; }
 }
-
-export default { FilterForm };

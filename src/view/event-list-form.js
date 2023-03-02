@@ -7,7 +7,7 @@ const eventListFormTemplateCreation = () => (
   `
 );
 
-class EventListForm {
+export default class EventListForm {
   getTemplate () { return eventListFormTemplateCreation(); }
 
   getElement() {
@@ -17,5 +17,3 @@ class EventListForm {
 
   removeElement() { this.element = null; }
 }
-
-export default { EventListForm };

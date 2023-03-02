@@ -42,7 +42,7 @@ const pointFormTemplateCreation = () => (
   `
 );
 
-class PointForm {
+export default class PointForm {
   getTemplate () { return pointFormTemplateCreation(); }
 
   getElement() {
@@ -52,5 +52,3 @@ class PointForm {
 
   removeElement() { this.element = null; }
 }
-
-export default { PointForm };

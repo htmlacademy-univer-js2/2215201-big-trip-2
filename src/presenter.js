@@ -5,7 +5,7 @@ import PointForm from './view/point-form.js';
 import EditForm from './view/edit-form.js';
 import SortForm from './view/sort-form.js';
 
-class TripEventsPresenter {
+export default class TripEventsPresenter {
   constructor() {
     this.eventsList = new EventListForm();
   }
@@ -23,5 +23,3 @@ class TripEventsPresenter {
     render(new CreateForm(), this.eventsList.getElement());
   }
 }
-
-export default { TripEventsPresenter };

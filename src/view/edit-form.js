@@ -158,7 +158,7 @@ const editFormTemplateCreation = () => (
   `
 );
 
-class EditForm {
+export default class EditForm {
   getTemplate () { return editFormTemplateCreation(); }
 
   getElement() {
@@ -168,5 +168,3 @@ class EditForm {
 
   removeElement() { this.element = null; }
 }
-
-export default { EditForm };
