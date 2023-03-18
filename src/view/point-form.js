@@ -57,18 +57,23 @@ const pointFormTemplateCreation = (point, destinations, offers) => {
 };
 
 export default class PointForm {
+  #offers = null;
+  #element = null;
+  #points = null;
+  #destination = null;
+
   constructor(point, destination, offers) {
-    this.points = point;
-    this.destination = destination;
-    this.offers = offers;
+    this.#points = point;
+    this.#destination = destination;
+    this.#offers = offers;
   }
 
-  getTemplate () { return pointFormTemplateCreation(this.points, this.destination, this.offers); }
+  get template () { return pointFormTemplateCreation(this.#points, this.#destination, this.#offers); }
 
-  getElement() {
-    if (!this.element) { this.element = createElement(this.getTemplate()); }
-    return this.element;
+  get element() {
+    if (!this.#element) { this.#element = createElement(this.template); }
+    return this.#element;
   }
 
-  removeElement() { this.element = null; }
+  removeElement() { this.#element = null; }
 }

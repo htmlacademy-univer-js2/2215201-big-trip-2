@@ -6,24 +6,70 @@ import SortForm from './view/sort-form.js';
 
 
 export default class TripEventsPresenter {
+  #offers = null;
+  #dataTrip = null;
+  #nodesModel = null;
+  #destinations = null;
+  #boardPoints = null;
+  #eventsList = null;
+
   constructor(dataTrip) {
-    this.eventsList = new EventListForm();
-    this.dataTrip = dataTrip;
+    this.#eventsList = new EventListForm();
+    this.#dataTrip = dataTrip;
   }
 
   init(pointsModel) {
-    this.pointsModel = pointsModel;
-    this.offers = [...this.pointsModel.getOffers()];
-    this.boardPoints = [...this.pointsModel.getPoints()];
-    this.destinations = [...this.pointsModel.getDestinations()];
+    this.#nodesModel = pointsModel;
+    this.#offers = [...this.#nodesModel.offers()];
+    this.#boardPoints = [...this.#nodesModel.points()];
+    this.#destinations = [...this.#nodesModel.destinations()];
 
-    render(new SortForm(), this.dataTrip);
-    render(this.eventsList, this.dataTrip);
-    render(new EditForm(this.boardPoints[0], this.destinations, this.offers), this.eventsList.getElement());
+    render(new SortForm(), this.#dataTrip);
+    render(this.#eventsList, this.#dataTrip);
 
-    for (const point of this.boardPoints)
+    for (const point of this.#boardPoints)
     {
-      render(new PointForm(point, this.destinations, this.offers), this.eventsList.getElement());
+      this.#renderPoint(point);
     }
   }
+
+  #renderPoint = (node) => {
+    const editComponent = new EditForm(node, this.#destinations, this.#offers);
+    const component = new PointForm(node, this.#destinations, this.#offers);
+
+    const replacePointToEditForm = () => {
+      this.#eventsList.element.replaceChild(editComponent.element, component.element);
+    };
+
+    const replaceEditFormToPoint = () => {
+      this.#eventsList.element.replaceChild(component.element, editComponent.element);
+    };
+
+    const onEscKeyDown = (evt) => {
+      if (evt.key === 'Escape' || evt.key === 'Esc') {
+        evt.preventDefault();
+        replaceEditFormToPoint();
+        document.removeEventListener('keydown', onEscKeyDown);
+      }
+    };
+
+    editComponent.element.querySelector('form').addEventListener('submit', (evt) => {
+      evt.preventDefault();
+      replaceEditFormToPoint();
+      document.removeEventListener('keydown', onEscKeyDown);
+    });
+
+    component.element.querySelector('.event__rollup-btn').addEventListener('click', () => {
+      replacePointToEditForm();
+      document.addEventListener('keydown', onEscKeyDown);
+    });
+
+    editComponent.element.querySelector('.event__rollup-btn').addEventListener('click', (evt) => {
+      evt.preventDefault();
+      replaceEditFormToPoint();
+      document.removeEventListener('keydown', onEscKeyDown);
+    });
+
+    render(component, this.#eventsList.element)
+  };
 }
