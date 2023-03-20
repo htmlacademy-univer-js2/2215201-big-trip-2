@@ -24,12 +24,14 @@ const filterFormTemplateCreation = () => (
 );
 
 export default class FilterForm {
-  getTemplate () { return filterFormTemplateCreation(); }
+  #element = null;
 
-  getElement() {
-    if (!this.element) { this.element = createElement(this.getTemplate()); }
-    return this.element;
+  get template () { return filterFormTemplateCreation(); }
+
+  get element() {
+    if (!this.#element) { this.#element = createElement(this.template); }
+    return this.#element;
   }
 
-  removeElement() { this.element = null; }
+  removeElement() { this.#element = null; }
 }

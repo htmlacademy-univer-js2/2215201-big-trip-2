@@ -10,12 +10,14 @@ const menuFormTemplateCreation = () => (
 );
 
 export default class MenuForm {
-  getTemplate () { return menuFormTemplateCreation(); }
+  #element = null;
 
-  getElement() {
-    if (!this.element) { this.element = createElement(this.getTemplate()); }
-    return this.element;
+  get template () { return menuFormTemplateCreation(); }
+
+  get element() {
+    if (!this.#element) { this.#element = createElement(this.template); }
+    return this.#element;
   }
 
-  removeElement() { this.element = null; }
+  removeElement() { this.#element = null; }
 }

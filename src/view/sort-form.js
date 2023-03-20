@@ -32,12 +32,14 @@ const sortFormTemplateCreation = () => (
 );
 
 export default class SortForm {
-  getTemplate () { return sortFormTemplateCreation(); }
+  #element = null;
 
-  getElement() {
-    if (!this.element) { this.element = createElement(this.getTemplate()); }
-    return this.element;
+  get template () { return sortFormTemplateCreation(); }
+
+  get element() {
+    if (!this.#element) { this.#element = createElement(this.template); }
+    return this.#element;
   }
 
-  removeElement() { this.element = null; }
+  removeElement() { this.#element = null; }
 }
