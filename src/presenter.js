@@ -3,6 +3,7 @@ import EventListForm from './view/event-list-form.js';
 import PointForm from './view/point-form.js';
 import EditForm from './view/edit-form.js';
 import SortForm from './view/sort-form.js';
+import NoViewForm from './view/no-view-form.js';
 
 
 export default class TripEventsPresenter {
@@ -24,12 +25,15 @@ export default class TripEventsPresenter {
     this.#boardPoints = [...this.#nodesModel.points()];
     this.#destinations = [...this.#nodesModel.destinations()];
 
-    render(new SortForm(), this.#dataTrip);
-    render(this.#eventsList, this.#dataTrip);
-
-    for (const point of this.#boardPoints)
-    {
-      this.#renderPoint(point);
+    if (this.#boardPoints.length === 0) {
+      render(new NoViewForm(), this.#dataTrip)
+    }
+    else {
+      render(new SortForm(), this.#dataTrip);
+      render(this.#eventsList, this.#dataTrip);
+      for (const point of this.#boardPoints) {
+        this.#renderPoint(point);
+      }
     }
   }
 
