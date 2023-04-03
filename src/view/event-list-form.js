@@ -1,4 +1,4 @@
-import {createElement} from '../render';
+import AbstractView from '../framework/view/abstract-view.js';
 
 const eventListFormTemplateCreation = () => (
   `
@@ -7,15 +7,8 @@ const eventListFormTemplateCreation = () => (
   `
 );
 
-export default class EventListForm {
+export default class EventListForm extends AbstractView{
   #element = null;
 
   get template () { return eventListFormTemplateCreation(); }
-
-  get element() {
-    if (!this.#element) { this.#element = createElement(this.template); }
-    return this.#element;
-  }
-
-  removeElement() { this.#element = null; }
 }

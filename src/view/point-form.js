@@ -1,4 +1,4 @@
-import {createElement} from '../render';
+import AbstractForm from '../framework/view/abstract-view.js';
 import {humanizePointDueDate, duration, getDate, getTime} from '../utils.js';
 
 const renderOffers = (allOffers, checkedOffers) => {
@@ -56,13 +56,14 @@ const pointFormTemplateCreation = (point, destinations, offers) => {
   );
 };
 
-export default class PointForm {
+export default class PointForm extends AbstractForm{
   #offers = null;
   #element = null;
   #points = null;
   #destination = null;
 
   constructor(point, destination, offers) {
+    super();
     this.#points = point;
     this.#destination = destination;
     this.#offers = offers;
@@ -70,10 +71,13 @@ export default class PointForm {
 
   get template () { return pointFormTemplateCreation(this.#points, this.#destination, this.#offers); }
 
-  get element() {
-    if (!this.#element) { this.#element = createElement(this.template); }
-    return this.#element;
-  }
+  setEditClickHandler = (callback) => {
+    this._callback.editClick = callback;
+    this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
+  };
 
-  removeElement() { this.#element = null; }
+  #editClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.editClick();
+  }
 }

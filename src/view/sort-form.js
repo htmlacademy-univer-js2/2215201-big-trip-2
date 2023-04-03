@@ -1,4 +1,4 @@
-import {createElement} from '../render';
+import AbstractView from '../framework/view/abstract-view.js';
 
 const sortFormTemplateCreation = () => (
   `
@@ -31,15 +31,8 @@ const sortFormTemplateCreation = () => (
   `
 );
 
-export default class SortForm {
+export default class SortForm extends AbstractView {
   #element = null;
 
   get template () { return sortFormTemplateCreation(); }
-
-  get element() {
-    if (!this.#element) { this.#element = createElement(this.template); }
-    return this.#element;
-  }
-
-  removeElement() { this.#element = null; }
 }

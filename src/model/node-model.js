@@ -1,11 +1,7 @@
 export default class PointsModel {
-  #points = null;
-  #offers = null;
-  #destinations = null;
-
-  constructor() {
-    this.#points = [];
-  }
+  #points = [];
+  #destinations = [];
+  #offers = [];
 
   init(points, destinations, offers) {
     this.#points = points;

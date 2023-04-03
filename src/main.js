@@ -1,4 +1,4 @@
-import { render } from './render.js';
+import { render } from './framework/render.js';
 import {getPoints, getDestinations, getOffers} from './mock/point.js';
 import FilterForm from './view/filter-form.js';
 import MenuForm from './view/menu-form.js';

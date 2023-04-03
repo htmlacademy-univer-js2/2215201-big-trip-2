@@ -1,4 +1,4 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 
 const menuFormTemplateCreation = () => (
   `
@@ -9,15 +9,8 @@ const menuFormTemplateCreation = () => (
   `
 );
 
-export default class MenuForm {
+export default class MenuForm extends AbstractView {
   #element = null;
 
   get template () { return menuFormTemplateCreation(); }
-
-  get element() {
-    if (!this.#element) { this.#element = createElement(this.template); }
-    return this.#element;
-  }
-
-  removeElement() { this.#element = null; }
 }
