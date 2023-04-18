@@ -43,4 +43,9 @@ const getRandomElement = (elements) => {
   return elements[getRandomInteger(MIN, max)];
 };
 
-export { getRandomInteger, getRandomElement, humanizePointDueDate, duration, getDate, getDateTime, getTime };
+const isDatePast = (date) => dayjs().diff(date, 'day') > 0;
+const isDateFuture = (date) => date.diff(dayjs(), 'day') >= 0;
+const isDatePastFuture = (dateFrom, dateTo) => dayjs().diff(dateFrom, 'day') > 0 && dateTo.diff(dayjs(), 'day') > 0;
+
+export {getRandomInteger, getRandomElement, humanizePointDueDate, duration, getDate, getDateTime, getTime,
+  isDatePastFuture, isDatePast, isDateFuture};
