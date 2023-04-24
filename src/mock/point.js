@@ -1,4 +1,5 @@
 import dayjs from 'dayjs';
+import {nanoid} from 'nanoid';
 import { getRandomInteger, getRandomElement } from '../utils.js';
 
 const ElementCounter = {MIN: 1, MAX: 4};
@@ -59,7 +60,7 @@ const getOffers = () => Array.from({length: TYPES.length}).map((value, index) =>
 const offers = getOffers();
 const destinations = getDestinations();
 
-const generatePoint = (id) => {
+const generatePoint = () => {
   const offersByTypePoint = getRandomElement(offers);
   const allOfferIdsByTypePoint = offersByTypePoint.offers.map((offer) => offer.id);
   return {
@@ -67,7 +68,7 @@ const generatePoint = (id) => {
     dateFrom: dayjs().add(getRandomInteger(-3, 0), 'day').add(getRandomInteger(-2, 0), 'hour').add(getRandomInteger(-59, 0), 'minute'),
     dateTo: dayjs().add(getRandomInteger(0, 2), 'day').add(getRandomInteger(0, 59), 'hour').add(getRandomInteger(0, 59), 'minute'),
     destinationId: getRandomElement(destinations).id,
-    id,
+    id: nanoid(),
     isFavorite: Boolean(getRandomInteger()),
     offerIds: Array.from({length: getRandomInteger(0, allOfferIdsByTypePoint.length)}).map(() => allOfferIdsByTypePoint[getRandomInteger(0, allOfferIdsByTypePoint.length - 1)]),
     type: offersByTypePoint.type,
