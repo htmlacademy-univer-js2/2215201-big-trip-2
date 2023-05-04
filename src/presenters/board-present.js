@@ -3,7 +3,8 @@ import EventListForm from '../view/event-list-form.js';
 import SortForm from '../view/sort-form.js';
 import NoViewForm from '../view/no-view-form.js';
 import PointPresenter from './point-present.js';
-import {updateObj} from '../utils.js';
+import {updateObj, sortByPricePoint, sortByDayPoint, sortByTimePoint} from '../utils.js';
+import {SortType} from '../mock/consts.js';
 
 export default class BoardPresenter {
   #tripContainer = null;
@@ -15,6 +16,8 @@ export default class BoardPresenter {
   #pointListComponent = new EventListForm();
 
   #pointPresenter = new Map();
+  #sourcedBoardPoints = [];
+  #currentSort = null;
 
   constructor(tripContainer, pointsModel) {
     this.#tripContainer = tripContainer;
@@ -24,6 +27,8 @@ export default class BoardPresenter {
   init() {
 
     this.#boardPoints = [...this.#pointsModel.points];
+
+    this.#sourcedBoardPoints = [...this.#pointsModel.points]
 
     if (this.#boardPoints.length === 0) {
       this.#renderNoPoints();
@@ -40,11 +45,40 @@ export default class BoardPresenter {
 
   #handlePointChange = (updatedPoint) => {
     this.#boardPoints = updateObj(this.#boardPoints, updatedPoint);
+    this.#sourcedBoardPoints = updateObj(this.#sourcedBoardPoints, updatedPoint);
     this.#pointPresenter.get(updatedPoint.id).init(updatedPoint);
   };
 
+  #sortPoint = (sortType) => {
+    this.#currentSort = sortType;
+
+    switch (sortType) {
+      case SortType.PRICE:
+        this.#boardPoints.sort(sortByPricePoint);
+        break;
+      case SortType.DAY:
+        this.#boardPoints.sort(sortByDayPoint);
+        break;
+      case SortType.TIME:
+        this.#boardPoints.sort(sortByTimePoint);
+        break;
+    }
+  }
+
+  #handleSort = (sortType) => {
+    if (this.#currentSort === sortType) {
+      return;
+    }
+
+    this.#sortPoint(sortType);
+    this.#clearPointList();
+    this.#renderPointList();
+  }
+
   #renderSort = () => {
+    this.#boardPoints.sort(sortByDayPoint);
     render(this.#sortComponent, this.#tripContainer, RenderPosition.AFTERBEGIN);
+    this.#sortComponent.setSortTypeChangeHandler(this.#handleSort);
   };
 
   #renderPoint = (point) => {
