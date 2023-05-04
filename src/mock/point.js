@@ -75,6 +75,6 @@ const generatePoint = () => {
   };
 };
 
-const getPoints = () => Array.from({length: COUNT_OF_POINTS}).map((value, index) => generatePoint (index + 1));
+const getPoints = () => Array.from({length: COUNT_OF_POINTS}).map(() => generatePoint()).sort();
 
 export {getPoints, getDestinations, getOffers};
