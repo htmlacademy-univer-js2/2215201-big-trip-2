@@ -4,7 +4,7 @@ import SortForm from '../view/sort-form.js';
 import NoViewForm from '../view/no-view-form.js';
 import PointPresenter from './point-present.js';
 import {updateObj, sortByPricePoint, sortByDayPoint, sortByTimePoint} from '../utils.js';
-import {SortType} from '../mock/consts.js';
+import {SortType, sorting} from '../mock/consts.js';
 
 export default class BoardPresenter {
   #tripContainer = null;
@@ -17,7 +17,7 @@ export default class BoardPresenter {
 
   #pointPresenter = new Map();
   #sourcedBoardPoints = [];
-  #currentSort = null;
+  #currentSort = SortType.DAY;
 
   constructor(tripContainer, pointsModel) {
     this.#tripContainer = tripContainer;
@@ -51,18 +51,7 @@ export default class BoardPresenter {
 
   #sortPoint = (sortType) => {
     this.#currentSort = sortType;
-
-    switch (sortType) {
-      case SortType.PRICE:
-        this.#boardPoints.sort(sortByPricePoint);
-        break;
-      case SortType.DAY:
-        this.#boardPoints.sort(sortByDayPoint);
-        break;
-      case SortType.TIME:
-        this.#boardPoints.sort(sortByTimePoint);
-        break;
-    }
+    sorting[sortType](this.#boardPoints);
   }
 
   #handleSort = (sortType) => {
@@ -76,7 +65,7 @@ export default class BoardPresenter {
   }
 
   #renderSort = () => {
-    this.#boardPoints.sort(sortByDayPoint);
+    sorting[SortType.DAY](this.#boardPoints);
     render(this.#sortComponent, this.#tripContainer, RenderPosition.AFTERBEGIN);
     this.#sortComponent.setSortTypeChangeHandler(this.#handleSort);
   };
