@@ -1,5 +1,6 @@
 import AbstractForm from '../framework/view/abstract-view.js';
 import {humanizePointDueDate, duration, getDate, getTime} from '../utils.js';
+import he from 'he';
 
 const renderOffers = (allOffers, checkedOffers) => {
   let out = '';
@@ -25,7 +26,7 @@ const pointFormTemplateCreation = (point, destinations, offers) => {
         <div class="event__type">
         <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event ${type} icon">
       </div>
-      <h3 class="event__title">${type} ${ destinations[destinationId].name}</h3>
+      <h3 class="event__title">${type} ${he.encode(destinations[destinationId].name)}</h3>
       <div class="event__schedule">
         <p class="event__time">
         <time class="event__start-time" datetime="${dateFrom}">${(startDate === endDate) ? getTime(dateFrom) : startDate}</time>
