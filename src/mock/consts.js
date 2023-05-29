@@ -14,4 +14,22 @@ const sorting = {
   [SortType.PRICE]: (points) => points.sort(sortByPricePoint)
 };
 
+export const Action = {
+  DELETE_POINT: 'DELETE_POINT',
+  UPDATE_POINT: 'UPDATE_POINT',
+  ADD_POINT: 'ADD_POINT'
+};
+
+export const UpdateType = {
+  MINOR: 'MINOR',
+  MAJOR: 'MAJOR',
+  PATCH: 'PATCH'
+};
+
+export const FilterType = {
+  FUTURE: 'future',
+  EVERYTHING: 'everything',
+  PAST: 'past'
+};
+
 export{sorting};

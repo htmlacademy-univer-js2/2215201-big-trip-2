@@ -69,23 +69,17 @@ const isDatePast = (date) => dayjs().diff(date, 'day') > 0;
 const isDateFuture = (date) => date.diff(dayjs(), 'day') >= 0;
 const isDatePastFuture = (dateFrom, dateTo) => dayjs().diff(dateFrom, 'day') > 0 && dateTo.diff(dayjs(), 'day') > 0;
 
-const updateObj = (objects, update) => {
-  const index = objects.findIndex((item) => item.id === update.id);
+const capitalize = (item) => {
+  if (item === false) {
+    return '';
+  }
 
-  if (index === -1) { return objects; }
-
-  return [
-    ...objects.slice(0, index),
-    update,
-    ...objects.slice(index + 1),
-  ];
+  return item[0].toUpperCase() + item.slice(1);
 };
-
-const capitalizeString = (str) => str[0].toUpperCase() + str.slice(1);
 
 const sortByPricePoint = (firstPoint, secondPoint) => secondPoint - firstPoint;
 const sortByDayPoint = (firstPoint, secondPoint) => dayjs(firstPoint.dateFrom).diff(dayjs(secondPoint.dateFrom));
 const sortByTimePoint = (firstPoint, secondPoint) => dayjs(secondPoint.dateTo).diff(dayjs(secondPoint.dateFrom)) - dayjs(firstPoint.dateTo).diff(dayjs(firstPoint.dateFrom));
 
 export {getRandomInteger, getRandomElement, humanizePointDueDate, duration, getDate, getDateTime, getTime,
-  isDatePastFuture, isDatePast, isDateFuture, updateObj, capitalizeString, sortByPricePoint, sortByDayPoint, sortByTimePoint};
+  isDatePastFuture, isDatePast, isDateFuture, capitalize, sortByPricePoint, sortByDayPoint, sortByTimePoint};
