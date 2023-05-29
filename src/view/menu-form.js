@@ -10,7 +10,5 @@ const menuFormTemplateCreation = () => (
 );
 
 export default class MenuForm extends AbstractView {
-  #element = null;
-
   get template () { return menuFormTemplateCreation(); }
 }

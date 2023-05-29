@@ -3,8 +3,11 @@ import {humanizePointDueDate, duration, getDate, getTime} from '../utils.js';
 import he from 'he';
 
 const renderOffers = (allOffers, checkedOffers) => {
+  if (!allOffers) {
+    return '';
+  }
   let out = '';
-  allOffers.forEach((offer) => {
+  allOffers.offers.forEach((offer) => {
     if (checkedOffers.includes(offer.id)) {
       out = `${out}<li class="event__offer"><span class="event__offer-title">${offer.title}</span>&plus;&euro;&nbsp;<span class="event__offer-price">${offer.price}</span></li>`;
     }
@@ -12,12 +15,13 @@ const renderOffers = (allOffers, checkedOffers) => {
   return out;
 };
 
-const pointFormTemplateCreation = (point, destinations, offers) => {
-  const {basePrice, type, destinationId, isFavorite, dateFrom, dateTo, offerIds} = point;
-  const allPointTypeOffers = offers.find((offer) => offer.type === type);
+const pointFormTemplateCreation = (point, destinations, allOffers) => {
+  const {basePrice, type, destination, isFavorite, dateFrom, dateTo, offers} = point;
+  const allPointTypeOffers = allOffers.find((x) => x.type === type);
   const eventDuration = duration(dateFrom, dateTo);
   const startDate = dateFrom !== null ? humanizePointDueDate(dateFrom) : '';
   const endDate = dateTo !== null ? humanizePointDueDate(dateTo) : '';
+  const destinationData = destinations.find((x) => x.id === destination);
   return (
     `
     <li class="trip-events__item">
@@ -26,7 +30,7 @@ const pointFormTemplateCreation = (point, destinations, offers) => {
         <div class="event__type">
         <img class="event__type-icon" width="42" height="42" src="img/icons/${type}.png" alt="Event ${type} icon">
       </div>
-      <h3 class="event__title">${type} ${he.encode(destinations[destinationId].name)}</h3>
+      <h3 class="event__title">${type} ${destinationData ? he.encode(destinationData.name) : ''}</h3>
       <div class="event__schedule">
         <p class="event__time">
         <time class="event__start-time" datetime="${dateFrom}">${(startDate === endDate) ? getTime(dateFrom) : startDate}</time>
@@ -40,7 +44,7 @@ const pointFormTemplateCreation = (point, destinations, offers) => {
       </p>
       <h4 class="visually-hidden">Offers:</h4>
       <ul class="event__selected-offers">
-        ${renderOffers(allPointTypeOffers.offers, offerIds)}
+        ${renderOffers(allPointTypeOffers, offers)}
       </ul>
       <button class="event__favorite-btn ${isFavorite ? 'event__favorite-btn--active' : ''}" type="button">
       <span class="visually-hidden">Add to favorite</span>
@@ -59,7 +63,6 @@ const pointFormTemplateCreation = (point, destinations, offers) => {
 
 export default class PointForm extends AbstractForm{
   #offers = null;
-  #element = null;
   #points = null;
   #destination = null;
 
@@ -72,8 +75,8 @@ export default class PointForm extends AbstractForm{
 
   get template () { return pointFormTemplateCreation(this.#points, this.#destination, this.#offers); }
 
-  setEditClickHandler = (callback) => {
-    this._callback.editClick = callback;
+  setEditClickHandler = (cb) => {
+    this._callback.editClick = cb;
     this.element.querySelector('.event__rollup-btn').addEventListener('click', this.#editClickHandler);
   };
 

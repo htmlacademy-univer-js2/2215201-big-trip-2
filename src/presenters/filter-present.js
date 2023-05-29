@@ -1,7 +1,7 @@
 import {render, replace, remove} from '../framework/render.js';
 import FilterForm from '../view/filter-form.js';
-import {filter} from '../filter';
-import {FilterType, UpdateType} from '../mock/consts.js';
+import {filter} from '../filter.js';
+import {FilterType, UpdateType} from '../consts.js';
 
 export default class FilterPresent {
   #filterContainer = null;
@@ -10,7 +10,7 @@ export default class FilterPresent {
 
   #filterComponent = null;
 
-  constructor(filterContainer, filterModel, pointsModel) {
+  constructor({filterContainer, pointsModel, filterModel}) {
     this.#filterContainer = filterContainer;
     this.#filterModel = filterModel;
     this.#pointsModel = pointsModel;

@@ -1,5 +1,5 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { FilterType } from '../mock/consts.js';
+import { FilterType } from '../consts.js';
 
 const NoPointsType = {
   [FilterType.FUTURE]: 'No future event right now',
@@ -7,7 +7,7 @@ const NoPointsType = {
   [FilterType.EVERYTHING]: 'Create your first point!'
 };
 
-const noViewFormTemplateCreation = () => {
+const noViewFormTemplateCreation = (filterType) => {
   const noPointValue = NoPointsType[filterType];
 
   return (`<p class="trip-events__msg">${noPointValue}</p>`);
@@ -18,7 +18,7 @@ export default class NoViewForm extends AbstractView {
 
   constructor(filterType) {
     super();
-    this.#filterType = filtertype;
+    this.#filterType = filterType;
   }
 
   get template() {
