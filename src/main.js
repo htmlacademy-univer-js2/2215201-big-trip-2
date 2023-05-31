@@ -19,7 +19,7 @@ const headerElement = document.querySelector('.trip-main');
 
 const pointsModel = new PointsModel(new PointApi(END_POINT, AUTHORIZATION));
 const destinationModel = new DestinationsModel(new DestinationApi(END_POINT, AUTHORIZATION));
-const offersModel = new OfferModel(new OfferApi(END_POINT, AUTHORIZATION));
+const offerModel = new OfferModel(new OfferApi(END_POINT, AUTHORIZATION));
 
 const filterModel = new FilterModel();
 const filterPresenter = new FilterPresent({
@@ -35,7 +35,7 @@ const presenterBoard = new BoardPresenter(
     pointsModel: pointsModel,
     filterModel: filterModel,
     destinationsModel: destinationModel,
-    offersModel: offersModel
+    offersModel: offerModel
   });
 presenterBoard.init();
 
@@ -49,7 +49,7 @@ const handleNewPointButtonClick = () => {
   presenterBoard.createPoint(handleNewPointFormClose);
   newPointButton.element.disable = true;
 };
-offersModel.init().finally(() => {
+offerModel.init().finally(() => {
   destinationModel.init().finally(() => {
     pointsModel.init().finally(() => {
       render(newPointButton, headerElement);

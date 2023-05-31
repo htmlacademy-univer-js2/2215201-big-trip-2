@@ -1,7 +1,7 @@
 import {render, replace, remove} from '../framework/render.js';
 import FilterForm from '../view/filter-form.js';
 import {filter} from '../filter.js';
-import {FilterType, UpdateType} from '../consts.js';
+import {Filter, Update} from '../consts.js';
 
 export default class FilterPresent {
   #filterContainer = null;
@@ -24,19 +24,19 @@ export default class FilterPresent {
 
     return [
       {
-        type: FilterType.FUTURE,
+        type: Filter.FUTURE,
         name: 'FUTURE',
-        count: filter[FilterType.FUTURE](points).length
+        count: filter[Filter.FUTURE](points).length
       },
       {
-        type: FilterType.PAST,
+        type: Filter.PAST,
         name: 'PAST',
-        count: filter[FilterType.PAST](points).length
+        count: filter[Filter.PAST](points).length
       },
       {
-        type: FilterType.EVERYTHING,
+        type: Filter.EVERYTHING,
         name: 'EVERYTHING',
-        count: filter[FilterType.EVERYTHING](points).length
+        count: filter[Filter.EVERYTHING](points).length
       }
     ];
   }
@@ -66,6 +66,6 @@ export default class FilterPresent {
       return;
     }
 
-    this.#filterModel.setFilter(UpdateType.MAJOR, filterType);
+    this.#filterModel.setFilter(Update.MAJOR, filterType);
   };
 }

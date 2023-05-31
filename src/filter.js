@@ -1,11 +1,11 @@
 import {isDateFuture, isDatePast, isDatePastFuture} from './utils.js';
-import {FilterType} from './consts.js';
+import {Filter} from './consts.js';
 
 const filter = {
-  [FilterType.EVERYTHING]: (points) => points,
-  [FilterType.PAST]: (points) => points.filter((point) => isDatePast(point.dateTo)
+  [Filter.EVERYTHING]: (points) => points,
+  [Filter.PAST]: (points) => points.filter((point) => isDatePast(point.dateTo)
     || isDatePastFuture(point.dateFrom, point.dateTo)),
-  [FilterType.FUTURE]: (points) => points.filter((point) => isDateFuture(point.dateFrom)
+  [Filter.FUTURE]: (points) => points.filter((point) => isDateFuture(point.dateFrom)
     || isDatePastFuture(point.dateFrom, point.dateTo))
 };
 

@@ -4,7 +4,7 @@ import SortForm from '../view/sort-form.js';
 import NoViewForm from '../view/no-view-form.js';
 import PointPresenter from './point-present.js';
 import LoadForm from '../view/load-form.js';
-import {SortType, sorting, Action, FilterType, UpdateType} from '../consts.js';
+import {Sort, sorting, Action, Filter, Update} from '../consts.js';
 import {filter} from '../filter.js';
 import PointNewPresenter from './new-point-present.js';
 
@@ -14,17 +14,15 @@ export default class BoardPresenter {
   #filterModel = null;
   #destinationsModel = null;
   #offersModel = null;
-
+  #pointPresenter = new Map();
+  #pointNewPresenter = null;
+  #currentSort = Sort.DAY;
+  #filterType = Filter.EVERYTHING;
+  #isLoading = true;
   #noPointComponent = null;
   #sortComponent = null;
   #pointListComponent = new EventListForm();
   #loadingComponent = new LoadForm();
-
-  #pointPresenter = new Map();
-  #pointNewPresenter = null;
-  #currentSort = SortType.DAY;
-  #filterType = FilterType.EVERYTHING;
-  #isLoading = true;
 
   constructor({tripContainer, pointsModel, filterModel, destinationsModel, offersModel}) {
     this.#tripContainer = tripContainer;
@@ -61,8 +59,8 @@ export default class BoardPresenter {
   }
 
   createPoint = (cb) => {
-    this.#currentSort = SortType.DAY;
-    this.#filterModel.setFilter(UpdateType.MAJOR, FilterType.EVERYTHING);
+    this.#currentSort = Sort.DAY;
+    this.#filterModel.setFilter(Update.MAJOR, Filter.EVERYTHING);
     this.#pointNewPresenter.init(cb);
   }
 
@@ -87,18 +85,18 @@ export default class BoardPresenter {
 
   #handleModelEvent = (updateType, data) => {
     switch (updateType) {
-      case UpdateType.PATCH:
+      case Update.PATCH:
         this.#pointPresenter.get(data.id).init(data);
         break;
-      case UpdateType.MINOR:
+      case Update.MINOR:
         this.#clearBoard();
         this.#renderBoard();
         break;
-      case UpdateType.MAJOR:
+      case Update.MAJOR:
         this.#clearBoard({resetSortType: true});
         this.#renderBoard();
         break;
-      case UpdateType.INIT:
+      case Update.INIT:
         this.#isLoading = false;
         remove(this.#loadingComponent);
         remove(this.#noPointComponent);
@@ -168,7 +166,7 @@ export default class BoardPresenter {
     }
 
     if (resetSortType) {
-      this.#currentSort = SortType.DAY;
+      this.#currentSort = Sort.DAY;
     }
   };
 

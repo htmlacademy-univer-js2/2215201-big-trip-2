@@ -2,7 +2,7 @@ import {sortByDayPoint, sortByPricePoint, sortByTimePoint} from './utils.js';
 
 export const SORT_TYPES_OFF = ['event', 'offer'];
 
-export const SortType = {
+export const Sort = {
   DAY: 'day',
   EVENT: 'event',
   TIME: 'time',
@@ -10,10 +10,10 @@ export const SortType = {
   OFFER: 'offer'
 };
 
-const sorting = {
-  [SortType.DAY]: (points) => points.sort(sortByDayPoint),
-  [SortType.TIME]: (points) => points.sort(sortByTimePoint),
-  [SortType.PRICE]: (points) => points.sort(sortByPricePoint)
+export const sorting = {
+  [Sort.DAY]: (points) => points.sort(sortByDayPoint),
+  [Sort.TIME]: (points) => points.sort(sortByTimePoint),
+  [Sort.PRICE]: (points) => points.sort(sortByPricePoint)
 };
 
 export const Action = {
@@ -22,28 +22,28 @@ export const Action = {
   ADD_POINT: 'ADD_POINT'
 };
 
-export const UpdateType = {
+export const Update = {
   MINOR: 'MINOR',
   MAJOR: 'MAJOR',
   PATCH: 'PATCH',
   INIT: 'INIT'
 };
 
-export const FilterType = {
+export const Filter = {
   FUTURE: 'future',
   EVERYTHING: 'everything',
   PAST: 'past'
 };
 
-export const SortTypeDescription = {
-  [SortType.DAY]: 'Day',
-  [SortType.EVENT]: 'Event',
-  [SortType.TIME]: 'Time',
-  [SortType.PRICE]: 'Price',
-  [SortType.OFFER]: 'Offer'
+export const SortCaption = {
+  [Sort.DAY]: 'Day',
+  [Sort.EVENT]: 'Event',
+  [Sort.TIME]: 'Time',
+  [Sort.PRICE]: 'Price',
+  [Sort.OFFER]: 'Offer'
 };
 
-export const PointType = {
+export const Point = {
   TAXI: 'taxi',
   BUS: 'bus',
   TRAIN: 'train',
@@ -56,20 +56,18 @@ export const PointType = {
 };
 
 export const PointTypeDescription = {
-  [PointType.TAXI]: 'Taxi',
-  [PointType.BUS]: 'Bus',
-  [PointType.TRAIN]: 'Train',
-  [PointType.SHIP]: 'Ship',
-  [PointType.DRIVE]: 'Drive',
-  [PointType.FLIGHT]: 'Flight',
-  [PointType.CHECK_IN]: 'Check-in',
-  [PointType.SIGHTSEEING]: 'Sightseeing',
-  [PointType.RESTAURANT]: 'Restaurant'
+  [Point.TAXI]: 'Taxi',
+  [Point.BUS]: 'Bus',
+  [Point.TRAIN]: 'Train',
+  [Point.SHIP]: 'Ship',
+  [Point.DRIVE]: 'Drive',
+  [Point.FLIGHT]: 'Flight',
+  [Point.CHECK_IN]: 'Check-in',
+  [Point.SIGHTSEEING]: 'Sightseeing',
+  [Point.RESTAURANT]: 'Restaurant'
 };
 
 export const ApiServiceResponse = {
   GET: 'GET',
   PUT: 'PUT'
 };
-
-export{sorting};

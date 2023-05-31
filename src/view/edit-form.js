@@ -1,6 +1,6 @@
 import {getDateTime} from '../utils.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import { PointType, PointTypeDescription} from '../consts.js';
+import { Point, PointTypeDescription} from '../consts.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css'
 import dayjs from 'dayjs';
@@ -13,7 +13,7 @@ const NEW_POINT = {
   destinationId: 0,
   isFavorite: false,
   offers: [],
-  type: PointType.TAXI
+  type: Point.TAXI
 };
 
 const renderDestinationPictures = (pics) => {
@@ -79,7 +79,7 @@ const renderEditingPointDateTemplate = (dateFrom, dateTo) => (
   </div>`
 );
 
-const renderEditingPointTypeTemplate = (currentType) => Object.values(PointType).map((type) => `<div class="event__type-item">
+const renderEditingPointTypeTemplate = (currentType) => Object.values(Point).map((type) => `<div class="event__type-item">
 <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}" ${currentType === type ? 'checked' : ''}>
 <label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">${PointTypeDescription[type]}</label>
 </div>`).join('');

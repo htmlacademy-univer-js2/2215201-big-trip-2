@@ -1,7 +1,7 @@
 import {render, replace, remove} from '../framework/render.js';
 import PointForm from '../view/point-form.js';
 import EditForm from '../view/edit-form.js';
-import {Action, UpdateType} from '../consts.js';
+import {Action, Update} from '../consts.js';
 
 const Mode = {
   PREVIEW: 'preview',
@@ -108,7 +108,7 @@ export default class PointPresenter {
   #handleFavoriteClick = () => {
     this.#changeData(
       Action.UPDATE_POINT,
-      UpdateType.PATCH,
+      Update.PATCH,
       {...this.#point, isFavorite: !this.#point.isFavorite});
   };
 
@@ -123,7 +123,7 @@ export default class PointPresenter {
   #handleFormSubmit = (point) => {
     this.#changeData(
       Action.UPDATE_POINT,
-      UpdateType.MINOR,
+      Update.MINOR,
       point);
     this.#replaceEditingPointToPreviewPoint();
   };
@@ -131,7 +131,7 @@ export default class PointPresenter {
   #handleDeleteClick = (point) => {
     this.#changeData(
       Action.DELETE_POINT,
-      UpdateType.MINOR,
+      Update.MINOR,
       point
     );
   };

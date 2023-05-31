@@ -1,10 +1,10 @@
 import AbstractView from '../framework/view/abstract-view.js';
-import { FilterType } from '../consts.js';
+import { Filter } from '../consts.js';
 
 const NoPointsType = {
-  [FilterType.FUTURE]: 'No future event right now',
-  [FilterType.PAST]: 'No past events right now',
-  [FilterType.EVERYTHING]: 'Create your first point!'
+  [Filter.FUTURE]: 'No future event right now',
+  [Filter.PAST]: 'No past events right now',
+  [Filter.EVERYTHING]: 'Create your first point!'
 };
 
 const noViewFormTemplateCreation = (filterType) => {
