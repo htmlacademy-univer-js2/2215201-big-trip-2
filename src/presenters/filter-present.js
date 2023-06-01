@@ -25,17 +25,17 @@ export default class FilterPresent {
     return [
       {
         type: Filter.FUTURE,
-        name: 'FUTURE',
+        name: Filter.FUTURE,
         count: filter[Filter.FUTURE](points).length
       },
       {
         type: Filter.PAST,
-        name: 'PAST',
+        name: Filter.PAST,
         count: filter[Filter.PAST](points).length
       },
       {
         type: Filter.EVERYTHING,
-        name: 'EVERYTHING',
+        name: Filter.EVERYTHING,
         count: filter[Filter.EVERYTHING](points).length
       }
     ];

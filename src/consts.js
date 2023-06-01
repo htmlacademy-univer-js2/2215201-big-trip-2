@@ -55,7 +55,7 @@ export const Point = {
   RESTAURANT: 'restaurant'
 };
 
-export const PointTypeDescription = {
+export const PointCaption = {
   [Point.TAXI]: 'Taxi',
   [Point.BUS]: 'Bus',
   [Point.TRAIN]: 'Train',
@@ -67,7 +67,17 @@ export const PointTypeDescription = {
   [Point.RESTAURANT]: 'Restaurant'
 };
 
+export const AUTHORIZATION = 'Basic hehehe0x0xhehehe';
+export const END_POINT = 'https://18.ecmascript.pages.academy/big-trip';
+
+export const Time = {
+  UPPER_LIMIT: 1000,
+  LOWER_LIMIT: 350
+};
+
 export const ApiServiceResponse = {
   GET: 'GET',
-  PUT: 'PUT'
+  PUT: 'PUT',
+  POST: 'POST',
+  DELETE: 'DELETE'
 };

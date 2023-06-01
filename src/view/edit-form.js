@@ -1,6 +1,6 @@
 import {getDateTime} from '../utils.js';
 import AbstractStatefulView from '../framework/view/abstract-stateful-view.js';
-import { Point, PointTypeDescription} from '../consts.js';
+import { Point, PointCaption} from '../consts.js';
 import flatpickr from 'flatpickr';
 import 'flatpickr/dist/flatpickr.min.css'
 import dayjs from 'dayjs';
@@ -81,7 +81,7 @@ const renderEditingPointDateTemplate = (dateFrom, dateTo) => (
 
 const renderEditingPointTypeTemplate = (currentType) => Object.values(Point).map((type) => `<div class="event__type-item">
 <input id="event-type-${type}-1" class="event__type-input  visually-hidden" type="radio" name="event-type" value="${type}" ${currentType === type ? 'checked' : ''}>
-<label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">${PointTypeDescription[type]}</label>
+<label class="event__type-label  event__type-label--${type}" for="event-type-${type}-1">${PointCaption[type]}</label>
 </div>`).join('');
 
 const renderResetButtonTemplate = (isNewPoint) => isNewPoint ? '<button class="event__reset-btn" type="reset">Cancel</button>' : `<button class="event__reset-btn" type="reset">Delete</button>

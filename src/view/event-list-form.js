@@ -8,5 +8,5 @@ const eventListFormTemplateCreation = () => (
 );
 
 export default class EventListForm extends AbstractView{
-  get template () { return eventListFormTemplateCreation; }
+  get template () { return eventListFormTemplateCreation(); }
 }

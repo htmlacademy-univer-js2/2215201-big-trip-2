@@ -1,5 +1,5 @@
-import ApiService from '../framework/api-service.js';
 import {ApiServiceResponse} from '../consts.js';
+import ApiService from '../framework/api-service.js';
 
 export default class OfferApi extends ApiService {
   get offers() {
@@ -14,8 +14,6 @@ export default class OfferApi extends ApiService {
       headers: new Headers({'Content-Type': 'application/json'})
     });
 
-    const parsedResponse = await ApiService.parseResponse(response);
-
-    return parsedResponse;
+    return await ApiService.parseResponse(response);
   }
 }
