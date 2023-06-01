@@ -1,7 +1,7 @@
 import {render, replace, remove} from '../framework/render.js';
 import FilterForm from '../view/filter-form.js';
-import {filter} from '../filter';
-import {FilterType, UpdateType} from '../mock/consts.js';
+import {filter} from '../filter.js';
+import {Filter, Update} from '../consts.js';
 
 export default class FilterPresent {
   #filterContainer = null;
@@ -10,7 +10,7 @@ export default class FilterPresent {
 
   #filterComponent = null;
 
-  constructor(filterContainer, filterModel, pointsModel) {
+  constructor({filterContainer, pointsModel, filterModel}) {
     this.#filterContainer = filterContainer;
     this.#filterModel = filterModel;
     this.#pointsModel = pointsModel;
@@ -24,19 +24,19 @@ export default class FilterPresent {
 
     return [
       {
-        type: FilterType.FUTURE,
-        name: 'FUTURE',
-        count: filter[FilterType.FUTURE](points).length
+        type: Filter.FUTURE,
+        name: Filter.FUTURE,
+        count: filter[Filter.FUTURE](points).length
       },
       {
-        type: FilterType.PAST,
-        name: 'PAST',
-        count: filter[FilterType.PAST](points).length
+        type: Filter.PAST,
+        name: Filter.PAST,
+        count: filter[Filter.PAST](points).length
       },
       {
-        type: FilterType.EVERYTHING,
-        name: 'EVERYTHING',
-        count: filter[FilterType.EVERYTHING](points).length
+        type: Filter.EVERYTHING,
+        name: Filter.EVERYTHING,
+        count: filter[Filter.EVERYTHING](points).length
       }
     ];
   }
@@ -66,6 +66,6 @@ export default class FilterPresent {
       return;
     }
 
-    this.#filterModel.setFilter(UpdateType.MAJOR, filterType);
+    this.#filterModel.setFilter(Update.MAJOR, filterType);
   };
 }

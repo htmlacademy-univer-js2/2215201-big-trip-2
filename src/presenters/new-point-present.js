@@ -1,7 +1,6 @@
 import {render, remove, RenderPosition} from '../framework/render.js';
 import EditForm from '../view/edit-form.js';
-import {nanoid} from 'nanoid';
-import {Action, UpdateType} from '../mock/consts.js';
+import {Action, Update} from '../consts.js';
 
 export default class PointNewPresenter {
   #pointListContainer = null;
@@ -11,12 +10,16 @@ export default class PointNewPresenter {
   #pointsModel = null;
   #destinations = null;
   #offers = null;
-  #isNewPoint = true;
+  #destinationsModel = null;
+  #offerModel = null;
 
-  constructor(pointListContainer, changeData, pointsModel) {
+
+  constructor({pointListContainer, changeData, pointsModel, destinationsModel, offersModel}) {
     this.#pointListContainer = pointListContainer;
     this.#changeData = changeData;
     this.#pointsModel = pointsModel;
+    this.#destinationsModel = destinationsModel;
+    this.#offerModel = offersModel;
   }
 
   init = (callback) => {
@@ -25,16 +28,16 @@ export default class PointNewPresenter {
     if (this.#editingPointComponent !== null) {
       return;
     }
-    this.#destinations = [...this.#pointsModel.destinations];
-    this.#offers = [...this.#pointsModel.offers];
+    this.#destinations = [...this.#destinationsModel.destinations];
+    this.#offers = [...this.#offerModel.offers];
 
     this.#editingPointComponent = new EditForm({
       destination: this.#destinations,
       offers: this.#offers,
-      isNewPoint: this.#isNewPoint
+      isNewPoint: true
     });
     this.#editingPointComponent.setFormSubmitHandler(this.#handleFormSubmit);
-    this.#editingPointComponent.setDeleteClickHandler(this.#handleDeleteClick);
+    this.#editingPointComponent.setResetClickHandler(this.#handleResetClick);
 
     render(this.#editingPointComponent, this.#pointListContainer, RenderPosition.AFTERBEGIN);
 
@@ -61,15 +64,15 @@ export default class PointNewPresenter {
     }
   };
 
-  #handleDeleteClick = () => {
+  #handleResetClick = () => {
     this.destroy();
   };
 
   #handleFormSubmit = (point) => {
     this.#changeData(
       Action.ADD_POINT,
-      UpdateType.MINOR,
-      {id: nanoid(), ...point},
+      Update.MINOR,
+      point
     );
     this.destroy();
   };
