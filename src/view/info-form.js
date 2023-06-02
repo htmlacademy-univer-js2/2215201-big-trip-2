@@ -1,72 +1,66 @@
-import {humanizePointDueDate} from '../utils.js';
+import {reformatDate } from '../utils.js';
 import AbstractView from '../framework/view/abstract-view.js';
 
-const renderInfo = (points, destinations) => {
-  if (points.length === 0) {return '';}
+const renderDates = (points) => {
+  if (points.length === 0) {
+    return '';
+  }
+  const startDate = points[0].dateFrom !== null ? reformatDate(points[0].dateFrom) : '';
+  const endDate = points[points.length - 1].dateTo !== null ? reformatDate(points[points.length - 1].dateTo) : '';
+  return `${startDate}&nbsp;&mdash;&nbsp;${endDate}`;
+};
 
-  const InfoNoRepeats = [points[0].destination];
-  for (let i = 1; i < points.length; i++) {
-    if (points[i].destination !== points[i-1].destination) {
-      InfoNoRepeats.push(points[i].destination);
-    }
+const renderRoute = (point, destinations) => {
+  if (point.length === 0) {
+    return '';
+  }
+  const noCheckedRoutes = [point[0].destination];
+  for (let i = 1; i < point.length; i++) {
+    if (point[i].destination !== point[i-1].destination) {noCheckedRoutes.push(point[i].destination);}
   }
 
-  if (InfoNoRepeats.length > 3) {
-    const start = destinations.find((object) => object.id === InfoNoRepeats[0]);
-    const finish = destinations.find((object) => object.id === InfoNoRepeats[InfoNoRepeats.length - 1]);
+  if (noCheckedRoutes.length >= 4) {
+    const start = destinations.find((item) => item.id === noCheckedRoutes[0]);
+    const finish = destinations.find((item) => item.id === noCheckedRoutes[noCheckedRoutes.length - 1]);
     return `${start.name} &mdash; ... &mdash; ${finish.name}`;
   }
 
-  return InfoNoRepeats
-    .map((dest) => `${destinations
-    .find((object) => object.id === dest).name}`)
-    .join(' &mdash; ');
+  return noCheckedRoutes.map((destination) => `${destinations.find((item) => item.id === destination).name}`).join(' &mdash; ');
 
 };
 
-const getPricePointOffers = (point, offers) => {
+const getOffersPrice = (point, offers) => {
   if (offers.length === 0) {return 0;}
-
-  let price = 0;
-  const offersTyped = offers.find((offer) => offer.type === point.type);
+  let total = 0;
+  const offersByType = offers.find((offer) => offer.type === point.type);
   const pointOffers = point.offers;
   pointOffers.forEach((offer) => {
-    price += offersTyped.offers.find((item) => item.id === offer).price;
+    total += offersByType.offers.find((item) => item.id === offer).price;
   });
-  return price;
+  return total;
 };
 
 const renderTotalPriceTrip = (points, offers) => {
   if (points.length === 0) {return '';}
-
   let total = 0;
   points.forEach((point) => {
     total += point.basePrice;
-    total += getPricePointOffers(point, offers);
+    total += getOffersPrice(point, offers);
   });
   return `Total: &euro;&nbsp;<span class="trip-info__cost-value">${total}</span>`;
 };
-const renderInfoDate = (points) => {
-  if (points.length === 0) {
-    return '';
-  }
-  const start = points[0].dateFrom !== null ? humanizePointDueDate(points[0].dateFrom) : '';
-  const finish = points[points.length - 1]
-    .dateTo !== null ? humanizePointDueDate(points[points.length - 1].dateTo) : '';
-  return `${start}&nbsp;&mdash;&nbsp;${finish}`;
-};
 
-const createTripInfoTemplate = (destinations, offers, points) => {
-  if (destinations.length === 0 || offers.length === 0) {
-    return '';
-  }
-  return    `<div class="trip-info">
-                <div class="trip-info__main">
-                    <h1 class="trip-info__title">${renderInfo(points, destinations)}</h1>
-                        <p class="trip-info__dates">${renderInfoDate(points)}</p>
-                </div>
-                <p class="trip-info__cost">${renderTotalPriceTrip(points, offers)}</p>
-            </div>`;
+const infoTemplateCreation = (points, dests, offers) => {
+  if (dests.length === 0 || offers.length === 0) {return '';}
+  return`<div class="trip-info">
+            <div class="trip-info__main">
+                <h1 class="trip-info__title">${renderRoute(points, dests)}</h1>
+                <p class="trip-info__dates">${renderDates(points)}</p>
+            </div>
+            <p class="trip-info__cost">
+                ${renderTotalPriceTrip(points, offers)}
+            </p>
+        </div>`;
 };
 
 export default class InfoForm extends AbstractView {
@@ -74,14 +68,15 @@ export default class InfoForm extends AbstractView {
   #offers = null;
   #points = null;
 
-  constructor(destinations, offers, points) {
+  constructor(points, dests, offers) {
     super();
-    this.#destinations = destinations;
-    this.#offers = offers;
     this.#points = points;
+    this.#offers = offers;
+    this.#destinations = dests;
   }
 
   get template () {
-    return createTripInfoTemplate(this.#points, this.#destinations, this.#offers);
+    return infoTemplateCreation(this.#points, this.#destinations, this.#offers);
   }
 }
+

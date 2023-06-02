@@ -1,101 +1,110 @@
-import {render, replace, remove} from '../framework/render.js';
+import { render, replace, remove } from '../framework/render.js';
+import { Action, Update } from '../const.js';
+import PreviewPointForm from '../view/preview-point-form.js';
 import PointForm from '../view/point-form.js';
-import EditForm from '../view/edit-form.js';
-import {Action, Update} from '../consts.js';
 
 const Mode = {
   PREVIEW: 'preview',
   EDITING: 'editing',
 };
 
-export default class PointPresenter {
+export default class PointPresent {
   #pointListContainer = null;
-  #previewPointComponent = null;
-  #editingPointComponent = null;
-  #pointsModel = null;
+  #pointComponent = null;
+  #editComponent = null;
   #destinationsModel = null;
   #offersModel = null;
-
-  #destinations = null;
-  #offers = null;
-
   #changeData = null;
   #changeMode = null;
 
-  #point = null;
   #mode = Mode.PREVIEW;
+  #destinations = null;
+  #offers = null;
+  #point = null;
 
-  constructor({pointListContainer, pointsModel, changeData, changeMode, destinationsModel, offersModel}) {
+  constructor({pointListContainer, changeData, changeMode, destinationsModel, offersModel}) {
     this.#pointListContainer = pointListContainer;
-    this.#pointsModel = pointsModel;
-    this.#changeData = changeData;
-    this.#changeMode = changeMode;
-    this.#destinationsModel = destinationsModel;
     this.#offersModel = offersModel;
-  }
-
-  init(point) {
-    this.#point = point;
-    this.#destinations = [...this.#destinationsModel.destinations];
-    this.#offers = [...this.#offersModel.offers];
-
-    const prevPreviewPointComponent = this.#previewPointComponent;
-    const prevEditingPointComponent =  this.#editingPointComponent;
-
-    this.#previewPointComponent = new PointForm(point, this.#destinations, this.#offers);
-    this.#editingPointComponent = new EditForm({
-      point: point,
-      destination: this.#destinations,
-      offers: this.#offers,
-      isNewPoint: false
-    });
-
-    this.#previewPointComponent.setEditClickHandler(this.#handleEditClick);
-    this.#previewPointComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
-    this.#editingPointComponent.setPreviewClickHandler(this.#handlePreviewClick);
-    this.#editingPointComponent.setFormSubmitHandler(this.#handleFormSubmit);
-    this.#editingPointComponent.setResetClickHandler(this.#handleDeleteClick);
-
-    if (prevPreviewPointComponent === null || prevEditingPointComponent === null) {
-      render(this.#previewPointComponent, this.#pointListContainer);
-      return;
-    }
-
-    if (this.#mode === Mode.PREVIEW) {
-      replace(this.#previewPointComponent, prevPreviewPointComponent);
-    }
-
-    if (this.#mode === Mode.EDITING) {
-      replace(this.#editingPointComponent, prevEditingPointComponent);
-    }
-
-    remove(prevPreviewPointComponent);
-    remove(prevEditingPointComponent);
+    this.#changeData = changeData;
+    this.#destinationsModel = destinationsModel;
+    this.#changeMode = changeMode;
   }
 
   destroy = () => {
-    remove(this.#previewPointComponent);
-    remove(this.#editingPointComponent);
+    remove(this.#pointComponent);
+    remove(this.#editComponent);
   };
 
   resetView = () => {
     if (this.#mode !== Mode.PREVIEW) {
-      this.#editingPointComponent.reset(this.#point);
-      this.#replaceEditingPointToPreviewPoint();
+      this.#editComponent.reset(this.#point);
+      this.#replaceEditToPreview();
     }
   };
 
-  #replacePreviewPointToEditingPoint = () => {
-    replace(this.#editingPointComponent, this.#previewPointComponent);
+  setSaving = () => {
+    if (this.#mode === Mode.EDITING) {
+      this.#editComponent.updateElement({
+        isDisabled: true,
+        isSaving: true,
+      });
+    }
+  };
+
+  setAborting = () => {
+    if (this.#mode === Mode.PREVIEW) {
+      this.#pointComponent.shake();
+      return;
+    }
+
+    this.#editComponent.shake(this.#resetFormState);
+  };
+
+  setDeleting = () => {
+    if (this.#mode === Mode.EDITING) {
+      this.#editComponent.updateElement({
+        isDisabled: true,
+        isDeleting: true,
+      });
+    }
+  };
+
+  #resetFormState = () => {
+    this.#editComponent.updateElement({
+      isDisabled: false,
+      isSaving: false,
+      isDeleting: false,
+    });
+  };
+
+  #replaceEditToPreview = () => {
+    replace(this.#pointComponent, this.#editComponent);
+    document.removeEventListener('keydown', this.#escKeyDownHandler);
+    this.#mode = Mode.PREVIEW;
+  };
+
+
+  #replacePreviewToEdit = () => {
+    replace(this.#editComponent, this.#pointComponent);
     document.addEventListener('keydown', this.#escKeyDownHandler);
     this.#changeMode();
     this.#mode = Mode.EDITING;
   };
 
-  #replaceEditingPointToPreviewPoint = () => {
-    replace(this.#previewPointComponent, this.#editingPointComponent);
-    document.removeEventListener('keydown', this.#escKeyDownHandler);
-    this.#mode = Mode.PREVIEW;
+  #handleFavoriteClick = () => {
+    this.#changeData(
+      Action.UPDATE_POINT,
+      Update.PATCH,
+      {...this.#point, isFavorite: !this.#point.isFavorite},
+    );
+  };
+
+  #handleEditClick = () => {
+    this.#replacePreviewToEdit();
+  };
+
+  #handlePreviewClick = () => {
+    this.resetView();
   };
 
   #escKeyDownHandler = (evt) => {
@@ -105,34 +114,61 @@ export default class PointPresenter {
     }
   };
 
-  #handleFavoriteClick = () => {
-    this.#changeData(
-      Action.UPDATE_POINT,
-      Update.PATCH,
-      {...this.#point, isFavorite: !this.#point.isFavorite});
-  };
-
-  #handleEditClick = () => {
-    this.#replacePreviewPointToEditingPoint();
-  };
-
-  #handlePreviewClick = () => {
-    this.resetView();
-  };
-
   #handleFormSubmit = (point) => {
     this.#changeData(
       Action.UPDATE_POINT,
       Update.MINOR,
-      point);
-    this.#replaceEditingPointToPreviewPoint();
+      point,
+    );
   };
 
-  #handleDeleteClick = (point) => {
+  #handleResetClick = (point) => {
     this.#changeData(
       Action.DELETE_POINT,
       Update.MINOR,
-      point
+      point,
     );
   };
+
+  init(point) {
+    this.#point = point;
+    this.#destinations = [...this.#destinationsModel.destinations];
+    this.#offers = [...this.#offersModel.offers];
+
+    const prevPreviewPointComponent = this.#pointComponent;
+    const prevEditingPointComponent =  this.#editComponent;
+
+    this.#pointComponent = new PreviewPointForm(point, this.#destinations, this.#offers);
+    this.#editComponent = new PointForm({
+      point: point,
+      destinations: this.#destinations,
+      offers: this.#offers,
+      isNewPoint: false
+    });
+
+    this.#pointComponent.setEditClickHandler(this.#handleEditClick);
+    this.#pointComponent.setFavoriteClickHandler(this.#handleFavoriteClick);
+    this.#editComponent.setPreviewClickHandler(this.#handlePreviewClick);
+    this.#editComponent.setFormSubmitHandler(this.#handleFormSubmit);
+    this.#editComponent.setResetClickHandler(this.#handleResetClick);
+
+    if (prevPreviewPointComponent === null || prevEditingPointComponent === null) {
+      render(this.#pointComponent, this.#pointListContainer);
+      return;
+    }
+
+    switch (this.#mode) {
+      case Mode.PREVIEW:
+        replace(this.#pointComponent, prevPreviewPointComponent);
+        break;
+      case Mode.EDITING:
+        replace(this.#pointComponent, prevEditingPointComponent);
+        this.#mode = Mode.PREVIEW;
+        break;
+    }
+
+    remove(prevPreviewPointComponent);
+    remove(prevEditingPointComponent);
+  }
 }
+

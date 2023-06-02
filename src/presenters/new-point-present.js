@@ -1,67 +1,48 @@
-import {render, remove, RenderPosition} from '../framework/render.js';
-import EditForm from '../view/edit-form.js';
-import {Action, Update} from '../consts.js';
+import { render, remove, RenderPosition } from '../framework/render.js';
+import { Action, Update } from '../const.js';
+import PointForm from '../view/point-form.js';
 
-export default class PointNewPresenter {
-  #pointListContainer = null;
-  #editingPointComponent = null;
-  #changeData = null;
-  #destroyCallback = null;
-  #pointsModel = null;
+export default class NewPointPresent {
+
   #destinations = null;
   #offers = null;
+
+  #pointListContainer = null;
+  #changeData = null;
+  #destroyCallback = null;
+  #creatingPointComponent = null;
+
   #destinationsModel = null;
-  #offerModel = null;
+  #offersModel = null;
 
-
-  constructor({pointListContainer, changeData, pointsModel, destinationsModel, offersModel}) {
+  constructor({pointListContainer, changeData, destinationsModel, offersModel}) {
     this.#pointListContainer = pointListContainer;
     this.#changeData = changeData;
-    this.#pointsModel = pointsModel;
     this.#destinationsModel = destinationsModel;
-    this.#offerModel = offersModel;
+    this.#offersModel = offersModel;
   }
 
-  init = (callback) => {
-    this.#destroyCallback = callback;
-
-    if (this.#editingPointComponent !== null) {
-      return;
-    }
-    this.#destinations = [...this.#destinationsModel.destinations];
-    this.#offers = [...this.#offerModel.offers];
-
-    this.#editingPointComponent = new EditForm({
-      destination: this.#destinations,
-      offers: this.#offers,
-      isNewPoint: true
-    });
-    this.#editingPointComponent.setFormSubmitHandler(this.#handleFormSubmit);
-    this.#editingPointComponent.setResetClickHandler(this.#handleResetClick);
-
-    render(this.#editingPointComponent, this.#pointListContainer, RenderPosition.AFTERBEGIN);
-
-    document.addEventListener('keydown', this.#escKeyDownHandler);
-  };
-
   destroy = () => {
-    if (this.#editingPointComponent === null) {
-      return;
-    }
+    if (this.#creatingPointComponent === null) { return; }
 
     this.#destroyCallback?.();
 
-    remove(this.#editingPointComponent);
-    this.#editingPointComponent = null;
+    remove(this.#creatingPointComponent);
+    this.#creatingPointComponent = null;
 
     document.removeEventListener('keydown', this.#escKeyDownHandler);
   };
 
-  #escKeyDownHandler = (evt) => {
-    if (evt.key === 'Escape' || evt.key === 'Esc') {
-      evt.preventDefault();
-      this.destroy();
-    }
+  setAborting = () => {
+    this.#creatingPointComponent.shake(this.#resetFormState);
+  };
+
+
+  setSaving = () => {
+    this.#creatingPointComponent.updateElement({
+      isDisabled: true,
+      isSaving: true,
+    });
   };
 
   #handleResetClick = () => {
@@ -72,8 +53,45 @@ export default class PointNewPresenter {
     this.#changeData(
       Action.ADD_POINT,
       Update.MINOR,
-      point
+      point,
     );
-    this.destroy();
+  };
+
+  #resetFormState = () => {
+    this.#creatingPointComponent.updateElement({
+      isDisabled: false,
+      isSaving: false,
+      isDeleting: false,
+    });
+  };
+
+  #escKeyDownHandler = (evt) => {
+    if (evt.key === 'Escape' || evt.key === 'Esc') {
+      evt.preventDefault();
+      this.destroy();
+    }
+  };
+
+  init = (cb) => {
+    this.#destroyCallback = cb;
+
+    if (this.#creatingPointComponent !== null) {
+      return;
+    }
+    this.#destinations = [...this.#destinationsModel.destinations];
+    this.#offers = [...this.#offersModel.offers];
+
+    this.#creatingPointComponent = new PointForm({
+      destinations: this.#destinations,
+      offers: this.#offers,
+      isNewPoint: true
+    });
+    this.#creatingPointComponent.setFormSubmitHandler(this.#handleFormSubmit);
+    this.#creatingPointComponent.setResetClickHandler(this.#handleResetClick);
+
+    render(this.#creatingPointComponent, this.#pointListContainer, RenderPosition.AFTERBEGIN);
+
+    document.addEventListener('keydown', this.#escKeyDownHandler);
   };
 }
+
