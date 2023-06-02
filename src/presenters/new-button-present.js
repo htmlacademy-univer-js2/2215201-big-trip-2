@@ -4,7 +4,6 @@ import NewButtonForm from '../view/new-button-form.js';
 export default class NewButtonPresent {
   #newButtonContainer = null;
   #newButtonComponent = null;
-
   #pointModel = null;
   #offerModel = null;
   #boardPresenter = null;
