@@ -1,11 +1,11 @@
-import AbstractView from '../framework/view/abstract-view';
+import AbstractView from '../framework/view/abstract-view.js';
 
-const createNewButtonTemplate = () => `<button class="trip-main__event-add-btn btn btn--big btn--yellow" type="button">New event</button>`;
+const newButtonTemplateCreation = () =>
+  '<button class="trip-main__event-add-btn  btn  btn--big  btn--yellow" type="button">' +
+    'New event' +
+  '</button>';
 
 export default class NewButtonForm extends AbstractView {
-  get template() {
-    return createNewButtonTemplate();
-  }
 
   setClickHandler = (cb) => {
     this._callback.click = cb;
@@ -15,5 +15,9 @@ export default class NewButtonForm extends AbstractView {
   #clickHandler = (evt) => {
     evt.preventDefault();
     this._callback.click();
+  };
+
+  get template() {
+    return newButtonTemplateCreation();
   }
 }

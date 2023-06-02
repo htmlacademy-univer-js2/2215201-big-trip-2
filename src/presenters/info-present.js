@@ -1,20 +1,20 @@
+import { render, remove } from '../framework/render.js';
 import InfoForm from '../view/info-form.js';
-import {render, remove} from '../framework/render.js';
 
-export default class InfoPresenter {
+export default class InfoPresent {
+  #tripInfoComponent = null;
   #destinationModel = null;
   #offerModel = null;
-  #infoComponent = null;
   #infoContainer = null;
 
   #points = null;
   #destinations = null;
   #offers = null;
 
-  constructor(destinationModel, offerModel, infoContainer) {
-    this.#destinationModel = destinationModel;
-    this.#offerModel = offerModel;
+  constructor(infoContainer, destModel, offerModel) {
     this.#infoContainer = infoContainer;
+    this.#offerModel = offerModel;
+    this.#destinationModel = destModel;
   }
 
   init = (points) => {
@@ -22,12 +22,11 @@ export default class InfoPresenter {
     this.#destinations = [...this.#destinationModel.destinations];
     this.#offers = [...this.#offerModel.offers];
 
-    this.#infoComponent = new InfoForm(this.#points, this.#destinations, this.#offers);
+    this.#tripInfoComponent = new InfoForm(this.#points, this.#destinations, this.#offers);
 
-    render(this.#infoComponent, this.#infoContainer);
-  }
-
-  destroy = () => {
-    remove(this.#infoComponent);
+    render(this.#tripInfoComponent, this.#infoContainer);
   };
+
+  destroy = () => { remove(this.#tripInfoComponent); };
 }
+

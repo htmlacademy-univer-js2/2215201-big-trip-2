@@ -1,60 +1,54 @@
 import dayjs from 'dayjs';
+import {Sort} from './const.js';
 
-const HOUR_MINUTES_COUNT = 60;
-const TOTAL_DAY_MINUTES_COUNT = 1440;
-const DATE_FORMAT = 'YYYY-MM-DD';
-const DATE_TIME_FORMAT = 'DD/MM/YY hh:mm';
-const TIME_FORMAT = 'hh:mm';
+const DATE = 'YYYY-MM-DD';
+const DATE_TIME = 'DD/MM/YY HH:mm';
+const TIME = 'HH:mm';
 
-const humanizePointDueDate = (date) => dayjs(date).format('DD MMM');
+const MINUTES_PER_HOUR = 60;
+const MINUTES_PER_DAY = 1440;
 
-const getDaysOutput = (days) => days <= 0 ? '' : `${`${days}`.padStart(2, '0')}D`;
-const getHoursOutput = (days, restHours) => (days <= 0 && restHours <= 0) ? '' : `${`${restHours}`.padStart(2, '0')}H`;
+export const reformatDate = (date) => dayjs(date).format('DD MMM');
 
-const getMinutesOutput = (restMinutes) => `${`${restMinutes}`.padStart(2, '0')}M`;
+export const getMinutes = (minutes) => `${`${minutes}`.padStart(2, '0')}M`;
+export const getHours = (days, hours) => (hours <= 0 && days <= 0) ? '' : `${`${hours}`.padStart(2, '0')}H`;
+export const getDays = (days) => days <= 0 ? '' : `${`${days}`.padStart(2, '0')}D`;
 
-const duration = (dateFrom, dateTo) => {
-  const start = dayjs(dateFrom);
-  const end = dayjs(dateTo);
-  const difference = end.diff(start, 'minute');
+export const calculateDuration = (dateFrom, dateTo) => {
+  const difference = dayjs(dateTo).diff(dayjs(dateFrom), 'minute');
 
-  const days = Math.floor(difference / TOTAL_DAY_MINUTES_COUNT);
-  const restHours = Math.floor((difference - days * TOTAL_DAY_MINUTES_COUNT) / HOUR_MINUTES_COUNT);
-  const restMinutes = difference - (days * TOTAL_DAY_MINUTES_COUNT + restHours * HOUR_MINUTES_COUNT);
+  const restDays = Math.trunc(difference / MINUTES_PER_DAY);
+  const restHours = Math.trunc((difference - restDays * MINUTES_PER_DAY) / MINUTES_PER_HOUR);
+  const restMinutes = difference - (restDays * MINUTES_PER_DAY + restHours * MINUTES_PER_HOUR);
+  const days = getDays(restDays);
+  const hours = getHours(restDays, restHours);
+  const minutes = getMinutes(restMinutes);
 
-  const daysOutput = getDaysOutput(days);
-  const hoursOutput = getHoursOutput(days, restHours);
-  const minutesOutput = getMinutesOutput(restMinutes);
-
-  return `${daysOutput} ${hoursOutput} ${minutesOutput}`;
+  return `${days} ${hours} ${minutes}`;
 };
 
-const getDate = (date) => dayjs(date).format(DATE_FORMAT);
+export const sortByPrice = (first, second) => second.basePrice - first.basePrice;
 
-const getTime = (date) => dayjs(date).format(TIME_FORMAT);
+export const sortByDay = (first, second) => dayjs(first.dateFrom).diff(dayjs(second.dateFrom));
 
-const getDateTime = (date) => dayjs(date).format(DATE_TIME_FORMAT);
+export const sortByTime = (first, second) => dayjs(second.dateTo).diff(dayjs(second.dateFrom)) - dayjs(first.dateTo).diff(dayjs(first.dateFrom));
 
-const getRandomInteger = (a = 0, b = 1) => {
-  const left = Math.ceil(Math.min(a, b));
-  const right = Math.floor(Math.max(a, b));
+export const getDate = (date) => dayjs(date).format(DATE);
 
-  return Math.floor(left + Math.random() * (right - left + 1));
+export const getTime = (date) => dayjs(date).format(TIME);
+
+export const getDateTime = (date) => dayjs(date).format(DATE_TIME);
+
+
+export const isPast = (to) => dayjs().diff(to, 'minute') > 0;
+
+export const isFuture = (from) => dayjs().diff(from, 'minute') <= 0;
+
+export const isPastFuture = (from, to) => dayjs().diff(from, 'minute') > 0 && dayjs().diff(to, 'minute') < 0;
+
+
+export const sorting = {
+  [Sort.DAY]: (points) => points.sort(sortByDay),
+  [Sort.TIME]: (points) => points.sort(sortByTime),
+  [Sort.PRICE]: (points) => points.sort(sortByPrice)
 };
-
-const getRandomElement = (items) => {
-  const min = 0;
-  const max = items.length - 1;
-  return items[getRandomInteger(min, max)];
-};
-
-const isDatePast = (dateTo) => dayjs().diff(dateTo, 'minute') > 0;
-const isDateFuture = (dateFrom) => dayjs().diff(dateFrom, 'minute') <= 0;
-const isDatePastFuture = (dateFrom, dateTo) => dayjs().diff(dateFrom, 'minute') > 0 && dayjs().diff(dateTo, 'minute') < 0;
-
-const sortByPricePoint = (firstPoint, secondPoint) => secondPoint - firstPoint;
-const sortByDayPoint = (firstPoint, secondPoint) => dayjs(firstPoint.dateFrom).diff(dayjs(secondPoint.dateFrom));
-const sortByTimePoint = (firstPoint, secondPoint) => dayjs(secondPoint.dateTo).diff(dayjs(secondPoint.dateFrom)) - dayjs(firstPoint.dateTo).diff(dayjs(firstPoint.dateFrom));
-
-export {getRandomInteger, getRandomElement, humanizePointDueDate, duration, getDate, getDateTime, getTime,
-  isDatePastFuture, isDatePast, isDateFuture, sortByPricePoint, sortByDayPoint, sortByTimePoint};
