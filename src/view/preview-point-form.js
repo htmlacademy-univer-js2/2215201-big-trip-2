@@ -4,13 +4,13 @@ import he from 'he';
 
 const renderOffer = (offers, checked) => {
   if (!offers) { return ''; }
-  let out = '';
+  let outputForm = '';
   offers.offers.forEach((offer) => {
     if (checked.includes(offer.id)) {
-      out = `${out}<li class="event__offer"><span class="event__offer-title">${offer.title}</span>&plus;&euro;&nbsp;<span class="event__offer-price">${offer.price}</span></li>`;
+      outputForm = `${outputForm}<li class="event__offer"><span class="event__offer-title">${offer.title}</span>&plus;&euro;&nbsp;<span class="event__offer-price">${offer.price}</span></li>`;
     }
   });
-  return out;
+  return outputForm;
 };
 
 const previewPointTemplateCreation = (point, destinations, offersGlobal) => {

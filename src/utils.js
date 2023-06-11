@@ -46,6 +46,7 @@ export const isFuture = (from) => dayjs().diff(from, 'minute') <= 0;
 
 export const isPastFuture = (from, to) => dayjs().diff(from, 'minute') > 0 && dayjs().diff(to, 'minute') < 0;
 
+export const isEsc = (key) => key === 'Escape' || key === 'Esc';
 
 export const sorting = {
   [Sort.DAY]: (points) => points.sort(sortByDay),

@@ -1,6 +1,7 @@
 import { render, remove, RenderPosition } from '../framework/render.js';
 import { Action, Update } from '../const.js';
 import PointForm from '../view/point-form.js';
+import {isEsc} from '../utils.js';
 
 export default class NewPointPresent {
 
@@ -66,7 +67,7 @@ export default class NewPointPresent {
   };
 
   #escKeyDownHandler = (evt) => {
-    if (evt.key === 'Escape' || evt.key === 'Esc') {
+    if (isEsc(evt.key)) {
       evt.preventDefault();
       this.destroy();
     }
