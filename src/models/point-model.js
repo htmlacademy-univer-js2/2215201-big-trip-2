@@ -14,7 +14,7 @@ export default class PointModel extends Observable{
   init = async () => {
     try {
       const points = await this.#pointApi.points;
-      this.#points = points.map(this.#adapt);
+      this.#points = points.map(this.#adapted);
       this.#isSuccessfulLoading = true;
     } catch(e) {
       this.#points = [];
@@ -34,7 +34,7 @@ export default class PointModel extends Observable{
 
   addPoint = async (updateType, update) => {
     try {
-      const added = this.#adapt(await this.#pointApi.addPoint(update));
+      const added = this.#adapted(await this.#pointApi.addPoint(update));
       this.#points.unshift(added);
       this._notify(updateType, added);
     } catch(e) {
@@ -61,7 +61,7 @@ export default class PointModel extends Observable{
     }
   };
 
-  updateNode = async (updateType, update) => {
+  updatePoint = async (updateType, update) => {
     const i = this.#points.findIndex((point) => point.id === update.id);
 
     if (i === -1) {
@@ -69,19 +69,19 @@ export default class PointModel extends Observable{
     }
 
     try {
-      const refreshed = this.#adapt(await this.#pointApi.updateNode(update));
+      const adapted = this.#adapted(await this.#pointApi.updatePoint(update));
       this.#points = [
         ...this.#points.slice(0, i),
-        refreshed,
+        adapted,
         ...this.#points.slice(i + 1),
       ];
-      this._notify(updateType, refreshed);
+      this._notify(updateType, adapted);
     } catch(e) {
-      throw new Error('Can\'t update point');
+      throw new Error('Can not update');
     }
   };
 
-  #adapt = (point) => {
+  #adapted = (point) => {
     const adapted = {...point,
       basePrice: point['base_price'],
       dateFrom: (point['date_from'] !== null || point['date_from'] !== undefined) ?
