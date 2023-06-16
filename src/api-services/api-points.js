@@ -29,12 +29,10 @@ export default class ApiPoints extends ApiService {
     return await ApiService.parseResponse(response);
   };
 
-  deletePoint = async (point) => {
-    return await this._load({
-      url: `points/${point.id}`,
-      method: ApiServiceResponse.DELETE,
-    });
-  };
+  deletePoint = async (point) => await this._load({
+    url: `points/${point.id}`,
+    method: ApiServiceResponse.DELETE,
+  });
 
   #adaptToServer = (point) => {
     const adaptedPoint = {...point,
